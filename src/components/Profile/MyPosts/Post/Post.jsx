@@ -7,7 +7,7 @@ const Post = (props) => {
       <img src='https://www.forward.bank/wp-content/themes/BankSiteResponsive_2017/img/logo.png'/>
       {props.message}
       <div>
-        <span>Like</span> {props.likecount}
+        <span>Like</span> {props.likesCount}
       </div>
     </div>
   );
