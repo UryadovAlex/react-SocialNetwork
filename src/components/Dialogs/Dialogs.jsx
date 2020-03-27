@@ -1,40 +1,24 @@
 import React from 'react';
 import classes from './Dialogs.module.css';
-import { NavLink } from 'react-router-dom';
-
-const DialogItem = (props) => {
-    return (
-        <div className={classes.dialog + ' ' + classes.active}>
-            <NavLink to={'/dialogs/' + props.id}>{props.name}</NavLink>
-        </div>
-    );
-}
-
-const Message = (props) => {
-    return (
-        <div className={classes.message}>{props.message}</div>
-    );
-}
+import DialogItem from "./DialogItem/DialogItem";
+import Message from "./Message/Message";
 
 const Dialogs = (props) => {
-    let dialogsData = [
-        {id: 1, name: 'Dymich'},
-        {id: 2, name: 'Andrey'},
-        {id: 3, name: 'Sasha'},
-        {id: 4, name: 'Sveta'},
-        {id: 5, name: 'Victor'},
-        {id: 6, name: 'Valera'}
-    ];
 
-    let messageData = [
-        {id: 1, message: 'Hi'},
-        {id: 2, message: 'How are you?'},
-        {id: 3, message: 'How is your day today?'}
-    ];
+    let dialogElement = props.state.dialogsData.map( dialog => <DialogItem name={dialog.name} id={dialog.id}/> );
 
-    let dialogElement = dialogsData.map( dialog => <DialogItem name={dialog.name} id={dialog.id}/> );
+    let messageElement = props.state.messageData.map( message => <Message message={message.message}/> );
 
-    let messageElement = messageData.map( message => <Message message={message.message}/> );
+    let newTextElement = React.createRef();
+
+    let addMessage = () => {
+        props.addMessage();
+    }
+
+    let updateTextMesage = () => {
+        let text = newTextElement.current.value;
+        props.updateMessageText(text);
+    }
 
     return (
         <div className={classes.dialogs}>
@@ -42,6 +26,10 @@ const Dialogs = (props) => {
                 { dialogElement }
             </div>
             <div className={classes.messages}>
+                <textarea ref={ newTextElement } onChange={updateTextMesage} value={props.state.newMessageText}/>
+                <div>
+                    <button onClick={ addMessage }>Add message</button>
+                </div>
                 { messageElement }
             </div>
         </div>
