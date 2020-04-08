@@ -2,24 +2,25 @@ import React from 'react';
 import classes from './Dialogs.module.css';
 import DialogItem from "./DialogItem/DialogItem";
 import Message from "./Message/Message";
-import {addMessageActionCreator, updateMessageTextActionCreator} from "../../redux/state";
+import {addMessageActionCreator, updateMessageTextActionCreator} from "../../redux/dialogs-reducer";
+
 
 const Dialogs = (props) => {
 
-    let dialogElement = props.state.dialogsData.map( dialog => <DialogItem name={dialog.name} id={dialog.id}/> );
+    let state = props.messagesPage;
 
-    let messageElement = props.state.messageData.map( message => <Message message={message.message}/> );
+    let dialogElement = state.dialogsData.map( dialog => <DialogItem name={dialog.name} id={dialog.id}/> );
+    let messageElement = state.messageData.map( message => <Message message={message.message}/> );
+    let newMessageBody = state.newMessageBody;
 
-    let newTextElement = React.createRef();
+    let onSendMessage = () => {
+        props.sendMessage();
+    };
 
-    let addMessage = () => {
-        props.dispatch(addMessageActionCreator());
-    }
-
-    let updateTextMesage = () => {
-        let text = newTextElement.current.value;
-        props.dispatch(updateMessageTextActionCreator(text));
-    }
+    let onNewMessageChange = (e) => {
+        let body = e.target.value;
+        props.updateNewMessageBody(body);
+    };
 
     return (
         <div className={classes.dialogs}>
@@ -27,14 +28,14 @@ const Dialogs = (props) => {
                 { dialogElement }
             </div>
             <div className={classes.messages}>
-                <textarea ref={ newTextElement } onChange={updateTextMesage} value={props.state.newMessageText}/>
+                <div>{ messageElement }</div>
+                <div><textarea onChange={ onNewMessageChange } value={ newMessageBody }/></div>
                 <div>
-                    <button onClick={ addMessage }>Add message</button>
+                    <button onClick={ onSendMessage }>Add message</button>
                 </div>
-                { messageElement }
             </div>
         </div>
     );
-}
+};
 
 export default Dialogs;
